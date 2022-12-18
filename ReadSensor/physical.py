@@ -2,6 +2,11 @@
 print("Sensors and Actuators")
 import time
 import serial.tools.list_ports
+from Adafruit_TIO import MQTTClient
+
+AIO_FEED_IDs = ["sensor1", "sensor2"]
+AIO_USERNAME = "Fusioz"
+AIO_KEY = "aio_SIMB58VHI2yANpldmbp9cww8EAxi"
 
 #Find the comport name (in Windows)
 def getPort():
