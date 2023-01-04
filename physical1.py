@@ -46,9 +46,6 @@ client.loop_background()
 print("Sensors and Actuators")
 import serial.tools.list_ports
 
-SCH_MAX_TASKS = 10
-NO_TASK_ID = 0
-
 #find the comport name
 def getPort():
     ports = serial.tools.list_ports.comports()
@@ -104,25 +101,42 @@ def serial_read_data(ser):
             return -1
     return 0
 
-soil_temperature =[3, 3, 0, 0, 0, 1, 133, 232]
+air_temperature =[3, 3, 0, 0, 0, 1, 133, 232]
 def readTemperature():
     serial_read_data(ser)
-    ser.write(soil_temperature)
-    time.sleep(1)
+    ser.write(air_temperature)
+    time.sleep(0.5)
     temp = serial_read_data(ser)
     print("Temperature:", temp)
-    client.publish("bbc-temp", temp)
+    client.publish("sensor2", temp)
     return temp
 
-soil_moisture = [3, 3, 0, 1, 0, 1, 212, 40]
+air_moisture = [3, 3, 0, 1, 0, 1, 212, 40]
 def readMoisture():
     serial_read_data(ser)
-    ser.write(soil_moisture)
-    time.sleep(1)
+    ser.write(air_moisture)
+    time.sleep(0.5)
     humid = serial_read_data(ser)
     print("Moisture:   ", humid)
-    client.publish("bbc-humid", humid)
+    client.publish("sensor1", humid)
     return humid
+
+soil_temperature = [1, 3, 0, 6, 0, 1, 100, 11]
+def readSoilTemp(ser, serial_read_data):
+    serial_read_data(ser)
+    ser.write(soil_temperature)
+    time.sleep(0.5)
+    return serial_read_data(ser)
+
+soil_moisture = [1, 3, 0, 7, 0, 1, 53, 203]
+def readSoilMoisture(ser, serial_read_data):
+    serial_read_data(ser)
+    ser.write(soil_moisture)
+    time.sleep(0.5)
+    return serial_read_data(ser)
+
+SCH_MAX_TASKS = 10
+NO_TASK_ID = 0
 
 def show_num():
     print('NUM 1, 2, 3, ...')
