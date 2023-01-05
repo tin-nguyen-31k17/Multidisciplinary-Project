@@ -67,6 +67,8 @@ def readMoisture():
     time.sleep(1)
     return serial_read_data(ser)
 
+
+
 while True:
     print("TEST MOTOR")
     setDevice1(True)
