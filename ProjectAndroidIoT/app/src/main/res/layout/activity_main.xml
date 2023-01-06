@@ -7,7 +7,7 @@
     android:background="@color/white"
 
 
-    tools:context=".MainActivity">
+    tools:context=".controller.MainActivity">
 
 <LinearLayout
     android:orientation="vertical"
