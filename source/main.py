@@ -11,7 +11,7 @@ from model import model
 #Constants
 AIO_FEED_IDs = ["sensor1", "sensor2", "sensor3", "sensor4", "relay1", "relay2", "AI"]
 AIO_USERNAME = "Fusioz"
-AIO_KEY = "aio_IWLz76sudCyUHGAmFh7fWx1Vklza"
+AIO_KEY = "aio_UbsT33Vd9VqI2i6NwpmCawL8onE"
 PUBLISH_INTERVAL = 100
 DETECTION_INTERVAL = 150
 
@@ -32,7 +32,7 @@ if portName != "None":
 #MQTt callbacks
 def connected(client):
     print("Ket noi thanh cong ...")
-    for topic in AIO_FEED_ID:
+    for topic in AIO_FEED_IDs:
         client.subscribe(topic)
 
 def subscribe(client , userdata , mid , granted_qos):
