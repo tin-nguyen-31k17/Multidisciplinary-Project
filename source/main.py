@@ -5,23 +5,23 @@ import time
 import port
 import serial.tools.list_ports
 import read_sensors
-import pump_control
+import relay_control
 from model import model
 
 #Constants
 AIO_FEED_IDs = ["sensor1", "sensor2", "sensor3", "sensor4", "relay1", "relay2", "AI"]
 AIO_USERNAME = "Fusioz"
-AIO_KEY = "aio_UbsT33Vd9VqI2i6NwpmCawL8onE"
+AIO_KEY = "aio_UbsT33Vd9VqI2i6NwpmCawL8onEQ"
 PUBLISH_INTERVAL = 100
 DETECTION_INTERVAL = 150
 
 #Variables
 count = 1
 count_detect = 1
-isPumpSignal = False
-isPump = False
-isRelaySignal = False
-isRelay = False
+isRelay1Signal = False
+isRelay1 = False
+isRelay2Signal = False
+isRelay2 = False
 
 #Connect to serial port
 portName = port.getPort()
@@ -45,22 +45,22 @@ def disconnected(client):
 def message(client , feed_id , payload):
     #Update relay states based on MQTT messages
     if feed_id == "relay1":
-        global isPumpSignal, isPump
-        isPumpSignal = True
-        if payload == "1":
-            isPump = True
+        global isRealay1Signal, isRelay1
+        isRelaySignal = True
+        if payload == "ON":
+            isRelay1 = True
             print("Relay 1: ON")
         else:
-            isPump = False
+            isRelay1 = False
             print("Relay 1: OFF")
     elif feed_id == "relay2":
-        global isRelaySignal, isRelay
-        isRelaySignal = True
-        if payload == "1":
-            isRelay = True
+        global isRelay2Signal, isRelay2
+        isRelay2Signal = True
+        if payload == "ON":
+            isRelay2 = True
             print("Relay 2: ON")
         else:
-            isRelay = False
+            isRelay2 = False
             print("Relay 2: OFF")
 
 #Connect to Adafruit IO
@@ -89,24 +89,24 @@ while True:
         print(f"Soil Humidity: {soil_humi_value}%")
         client.publish("sensor4", soil_humi_value)
         count = 0
-    if isPumpSignal:
-        if isPump:
-            pump_control.setDevice1(True, ser)
+    if isRelay1Signal:
+        if isRelay1:
+            relay_control.setDevice1(True, ser)
         else:
-            pump_control.setDevice1(False, ser)
-        isPumpSignal = False
-    if isRelaySignal:
-        if isRelay:
-            pump_control.setDevice2(True, ser)
+            relay_control.setDevice1(False, ser)
+        isRelay1Signal = False
+    if isRelay2Signal:
+        if isRelay2:
+            relay_control.setDevice2(True, ser)
         else:
-            pump_control.setDevice2(False, ser)
-        isRelaySignal = False
-    if count_detect == DETECTION_INTERVAL:
-        print('Detecting...')
-        model.image_capture()
-        ai_result = model.image_detector()
-        client.publish("AI", ai_result)
-        count_detect = 0
+            relay_control.setDevice2(False, ser)
+        isRelay2Signal = False
+    # if count_detect == DETECTION_INTERVAL:
+    #     print('Detecting...')
+    #     model.image_capture()
+    #     ai_result = model.image_detector()
+    #     client.publish("AI", ai_result)
+    #     count_detect = 0
 
     count_detect += 1
     count += 1
