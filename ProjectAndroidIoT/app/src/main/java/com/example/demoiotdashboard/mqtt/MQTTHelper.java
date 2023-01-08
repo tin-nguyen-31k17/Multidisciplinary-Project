@@ -1,8 +1,10 @@
 package com.example.demoiotdashboard.mqtt;
 
 import android.content.Context;
-import android.os.Build;
 import android.util.Log;
+
+
+import com.example.demoiotdashboard.alert.Alerts;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.DisconnectedBufferOptions;
@@ -14,17 +16,20 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
-
 public class MQTTHelper {
-    public MqttAndroidClient mqttAndroidClient;
 
-    public final String[] arrayTopics = {"minhtrung181/feeds/nhietdo", "minhtrung181/feeds/haha",
-                                        "minhtrung181/feeds/button"};
-    final String clientId = "minhtrung181";
-    final String username = "minhtrung181";
-    final String password = "aio_zcXs544Uq2JQWwELLQuNVAZ83HkS";
+    public MqttAndroidClient mqttAndroidClient;
+    public boolean connectFail = false;
+
+    public final String[] arrayTopics = {"Fusioz/feeds/sensor1", "Fusioz/feeds/sensor2", "Fusioz/feeds/sensor3", "Fusioz/feeds/sensor4",
+                                        "Fusioz/feeds/relay1", "Fusioz/feeds/relay2"};
+    final String clientId = "Fusioz";
+    final String username = "Fusioz";
+    final String password = "aio_xYrK0075BtNQyZ7mY44JS5WFYwLz";
 
     final String serverUri = "tcp://io.adafruit.com:1883";
+
+    Alerts alertDialog;
 
     public MQTTHelper(Context context){
         mqttAndroidClient = new MqttAndroidClient(context, serverUri, clientId);
@@ -81,6 +86,7 @@ public class MQTTHelper {
                 @Override
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
                     Log.w("Mqtt", "Failed to connect to: " + serverUri + exception.toString());
+
                 }
             });
 

@@ -6,9 +6,12 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.CompoundButton;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.example.demoiotdashboard.R;
+
+import com.example.demoiotdashboard.alert.Alerts;
 import com.example.demoiotdashboard.mqtt.MQTTHelper;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
@@ -28,39 +31,62 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
     MQTTHelper mqttHelper;
-    TextView txtTemp, txtHumi, txtAI;
+    TextView txtAirTemp, txtAirHumidity, txtAI, txtSoilTemperature, txtSoilHumidity;
     SwitchCompat buttonLED, buttonPUMP;
-    GraphView temperatureGraph, humidityGraph;
+    GraphView airHumidityGraph, airTemperatureGraph, soilTemperature, soilHumidity;
 
-    LineGraphSeries seriesTemperature = new LineGraphSeries<DataPoint>();
-    LineGraphSeries seriesHumidity = new LineGraphSeries<DataPoint>();
+    Alerts alertDialog;
 
+    LineGraphSeries seriesAirTemperature = new LineGraphSeries<DataPoint>();
+    LineGraphSeries seriesAirHumidity = new LineGraphSeries<DataPoint>();
+    LineGraphSeries seriesSoilHumidity = new LineGraphSeries<DataPoint>();
+    LineGraphSeries seriesSoilTemperature = new LineGraphSeries<DataPoint>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        txtTemp = findViewById(R.id.txtTemperature);
-        txtHumi = findViewById(R.id.txtHumidity);
+        txtAirTemp = findViewById(R.id.txtAirTemperature);
+        txtAirHumidity = findViewById(R.id.txtAirHumidity);
+        txtSoilTemperature = findViewById(R.id.txtSoilTemperature);
+        txtSoilHumidity = findViewById(R.id.txtSoilHumidity);
+
 //        txtAI = findViewById(R.id.txtAI);
         buttonLED = findViewById(R.id.buttonLED);
         buttonPUMP = findViewById(R.id.buttonPUMP);
 
-        temperatureGraph = (GraphView) findViewById(R.id.graph1);
-        temperatureGraph.getGridLabelRenderer().setHorizontalLabelsVisible(false);
-        temperatureGraph.getGridLabelRenderer().setGridColor(Color.WHITE);
-        temperatureGraph.getGridLabelRenderer().setVerticalLabelsColor(Color.WHITE);
-        temperatureGraph.getGridLabelRenderer().setHorizontalLabelsColor(Color.WHITE);
-        temperatureGraph.getGridLabelRenderer().setVerticalLabelsColor(Color.WHITE);
-        temperatureGraph.getGridLabelRenderer().setHorizontalLabelsColor(Color.WHITE);
+        airHumidityGraph = (GraphView) findViewById(R.id.graph1);
+        airHumidityGraph.getGridLabelRenderer().setHorizontalLabelsVisible(false);
+        airHumidityGraph.getGridLabelRenderer().setGridColor(Color.WHITE);
+        airHumidityGraph.getGridLabelRenderer().setVerticalLabelsColor(Color.WHITE);
+        airHumidityGraph.getGridLabelRenderer().setHorizontalLabelsColor(Color.WHITE);
+        airHumidityGraph.getGridLabelRenderer().setVerticalLabelsColor(Color.WHITE);
+        airHumidityGraph.getGridLabelRenderer().setHorizontalLabelsColor(Color.WHITE);
 
-        humidityGraph = (GraphView) findViewById(R.id.graph2);
-        humidityGraph.getGridLabelRenderer().setHorizontalLabelsVisible(false);
-        humidityGraph.getGridLabelRenderer().setGridColor(Color.WHITE);
-        humidityGraph.getGridLabelRenderer().setVerticalLabelsColor(Color.WHITE);
-        humidityGraph.getGridLabelRenderer().setHorizontalLabelsColor(Color.WHITE);
-        humidityGraph.getGridLabelRenderer().setVerticalLabelsColor(Color.WHITE);
-        humidityGraph.getGridLabelRenderer().setHorizontalLabelsColor(Color.WHITE);
+        airTemperatureGraph = (GraphView) findViewById(R.id.graph2);
+        airTemperatureGraph.getGridLabelRenderer().setHorizontalLabelsVisible(false);
+        airTemperatureGraph.getGridLabelRenderer().setGridColor(Color.WHITE);
+        airTemperatureGraph.getGridLabelRenderer().setVerticalLabelsColor(Color.WHITE);
+        airTemperatureGraph.getGridLabelRenderer().setHorizontalLabelsColor(Color.WHITE);
+        airTemperatureGraph.getGridLabelRenderer().setVerticalLabelsColor(Color.WHITE);
+        airTemperatureGraph.getGridLabelRenderer().setHorizontalLabelsColor(Color.WHITE);
+
+        soilTemperature = (GraphView) findViewById(R.id.graph3);
+        soilTemperature.getGridLabelRenderer().setHorizontalLabelsVisible(false);
+        soilTemperature.getGridLabelRenderer().setGridColor(Color.WHITE);
+        soilTemperature.getGridLabelRenderer().setVerticalLabelsColor(Color.WHITE);
+        soilTemperature.getGridLabelRenderer().setHorizontalLabelsColor(Color.WHITE);
+        soilTemperature.getGridLabelRenderer().setVerticalLabelsColor(Color.WHITE);
+        soilTemperature.getGridLabelRenderer().setHorizontalLabelsColor(Color.WHITE);
+
+        soilHumidity = (GraphView) findViewById(R.id.graph4);
+        soilHumidity.getGridLabelRenderer().setHorizontalLabelsVisible(false);
+        soilHumidity.getGridLabelRenderer().setGridColor(Color.WHITE);
+        soilHumidity.getGridLabelRenderer().setVerticalLabelsColor(Color.WHITE);
+        soilHumidity.getGridLabelRenderer().setHorizontalLabelsColor(Color.WHITE);
+        soilHumidity.getGridLabelRenderer().setVerticalLabelsColor(Color.WHITE);
+        soilHumidity.getGridLabelRenderer().setHorizontalLabelsColor(Color.WHITE);
+
 
 
 
@@ -71,9 +97,9 @@ public class MainActivity extends AppCompatActivity {
                     public void onCheckedChanged(CompoundButton compoundButton,
                                                  boolean b) {
                         if (b == true) {
-                            sendDataMQTT("minhtrung181/feeds/button", "ON");
+                            sendDataMQTT("Fusioz/feeds/relay1", "ON");
                         } else {
-                            sendDataMQTT("minhtrung181/feeds/button", "OFF");
+                            sendDataMQTT("Fusioz/feeds/relay1", "OFF");
                         }
                     }
                 });
@@ -84,9 +110,9 @@ public class MainActivity extends AppCompatActivity {
                     public void onCheckedChanged(CompoundButton compoundButton,
                                                  boolean b) {
                         if (b == true) {
-                            sendDataMQTT("minhtrung181/feeds/button", "ON");
+                            sendDataMQTT("Fusioz/feeds/relay2", "ON");
                         } else {
-                            sendDataMQTT("minhtrung181/feeds/button", "OFF");
+                            sendDataMQTT("Fusioz/feeds/relay2", "OFF");
                         }
                     }
                 });
@@ -134,31 +160,62 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
                 Log.d("TEST",topic+ "***" +message.toString());
-                if (topic.contains("nhietdo")){
-                    int x = Integer.parseInt(message.toString());
+                if (topic.contains("sensor1")){
+                    double x = Double.parseDouble(message.toString());
                     LocalDateTime time = LocalDateTime.now();
                     Date y = convertLocalDateTime(time);
-                    seriesTemperature.appendData(new DataPoint(y,x), true, 5, true);
-                    temperatureGraph.addSeries(seriesTemperature);
-                    temperatureGraph.onDataChanged(true, true);
-                    txtTemp.setText("Temperature: "  + message.toString() + "°C");
-                }else if(topic.contains("haha")){
-                    int x = Integer.parseInt(message.toString());
+                    seriesAirHumidity.appendData(new DataPoint(y,x), true, 3, true);
+                    airHumidityGraph.addSeries(seriesAirHumidity);
+                    airHumidityGraph.onDataChanged(true, true);
+                    txtAirHumidity.setText("Air Humidity: "  + message.toString() + "°C");
+                }
+
+
+                else if(topic.contains("sensor2")){
+
+                    double x = Double.parseDouble(message.toString());
                     LocalDateTime time = LocalDateTime.now();
                     Date y = convertLocalDateTime(time);
-                    seriesHumidity.appendData(new DataPoint(y,x), true, 5, true);
-                    humidityGraph.addSeries(seriesHumidity);
-                    humidityGraph.onDataChanged(true, true);
-                    txtHumi.setText("Humidity: " + message.toString() + "%" );
-                }else if(topic.contains("AI")){
+                    seriesAirTemperature.appendData(new DataPoint(y,x), true, 3, true);
+                    airTemperatureGraph.addSeries(seriesAirTemperature);
+                    airTemperatureGraph.onDataChanged(true, true);
+                    txtAirTemp.setText("Air Temperature: " + message.toString() + "%" );
+                }
+
+                else if(topic.contains("sensor3")){
+
+                    double x = Double.parseDouble(message.toString());
+                    LocalDateTime time = LocalDateTime.now();
+                    Date y = convertLocalDateTime(time);
+                    seriesSoilTemperature.appendData(new DataPoint(y,x), true, 3, true);
+                    soilTemperature.addSeries(seriesSoilTemperature);
+                    soilTemperature.onDataChanged(true, true);
+                    txtSoilTemperature.setText("Soil Temperature: " + message.toString() + "%" );
+                }
+                else if(topic.contains("sensor4")){
+
+                    double x = Double.parseDouble(message.toString());
+                    LocalDateTime time = LocalDateTime.now();
+                    Date y = convertLocalDateTime(time);
+                    seriesSoilHumidity.appendData(new DataPoint(y,x), true, 3, true);
+                    soilHumidity.addSeries(seriesSoilHumidity);
+                    soilHumidity.onDataChanged(true, true);
+                    txtSoilHumidity.setText("Soil Humidity: " + message.toString() + "%" );
+                }
+
+                else if(topic.contains("AI")){
                     txtAI.setText(message.toString());
-                }else if(topic.contains("button")){
+                }
+
+                else if(topic.contains("relay1")){
                     if (message.toString().equals("ON")){
                         buttonLED.setChecked(true);
                     }else{
                         buttonLED.setChecked(false);
                     }
-                }else if(topic.contains("button")){
+                }
+
+                else if(topic.contains("relay2")){
                     if(message.toString().equals("ON")) {
                         buttonPUMP.setChecked(true);
                     }else{
@@ -172,5 +229,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
 
 }

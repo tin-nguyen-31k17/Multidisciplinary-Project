@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
 
-
+    android:id="@+id/mainScroll"
     tools:context=".controller.MainActivity">
 
 <LinearLayout
@@ -52,23 +52,23 @@
         android:background="@color/black">
 
         <ImageView
-            android:id="@+id/templogo"
-            android:layout_width="62dp"
+            android:id="@+id/airhumiditylogo"
+            android:layout_width="55dp"
             android:layout_height="62dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="30dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/templogo"></ImageView>
+            android:src="@drawable/airhumidity"></ImageView>
         <TextView
-            android:id="@+id/txtTemperature"
+            android:id="@+id/txtAirHumidity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="2dp"
             android:layout_marginTop="15dp"
             android:layout_marginEnd="7dp"
             android:layout_marginBottom="7dp"
-            android:layout_toRightOf="@+id/templogo"
-            android:text="Temperature: Loading"
+            android:layout_toRightOf="@+id/airhumiditylogo"
+            android:text="Air Humidity: Loading"
             android:gravity="center"
             android:textColor="@color/white"
             android:textSize="20sp"
@@ -90,28 +90,28 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/blue">
+        android:background="@color/black">
         <ImageView
-            android:id="@+id/humiditylogo"
+            android:id="@+id/airtemperature"
             android:layout_width="62dp"
             android:layout_height="62dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/humiditylogo"></ImageView>
+            android:src="@drawable/templogo"></ImageView>
 
         <TextView
-            android:id="@+id/txtHumidity"
+            android:id="@+id/txtAirTemperature"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="3dp"
             android:layout_marginTop="15dp"
             android:layout_marginEnd="3dp"
             android:layout_marginBottom="3dp"
-            android:layout_toRightOf="@+id/humiditylogo"
+            android:layout_toRightOf="@+id/airtemperature"
             android:gravity="center"
-            android:text="Humidity: Loading"
-            android:textColor="@color/black"
+            android:text="Air Temperature: Loading"
+            android:textColor="@color/white"
             android:textSize="20sp" />
 
 
@@ -128,6 +128,89 @@
 
         android:layout_margin="2dp"
         android:background="@color/black" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/black">
+
+        <ImageView
+            android:id="@+id/soiltemperaturelogo"
+            android:layout_width="55dp"
+            android:layout_height="62dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="30dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/soiltemperature"></ImageView>
+        <TextView
+            android:id="@+id/txtSoilTemperature"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="7dp"
+            android:layout_marginBottom="7dp"
+            android:layout_toRightOf="@+id/soiltemperaturelogo"
+            android:text="Soil Temperature: Loading"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            />
+
+
+
+    </RelativeLayout>
+
+
+
+    <com.jjoe64.graphview.GraphView
+        android:id="@+id/graph3"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="@color/black"
+        android:layout_margin="2dp"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/black">
+
+        <ImageView
+            android:id="@+id/soilhumiditylogo"
+            android:layout_width="55dp"
+            android:layout_height="62dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="30dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/soilhumidity"></ImageView>
+        <TextView
+            android:id="@+id/txtSoilHumidity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="7dp"
+            android:layout_marginBottom="7dp"
+            android:layout_toRightOf="@+id/soilhumiditylogo"
+            android:text="Soil Humidity: Loading"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            />
+
+
+
+    </RelativeLayout>
+
+
+
+    <com.jjoe64.graphview.GraphView
+        android:id="@+id/graph4"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="@color/black"
+        android:layout_margin="2dp"/>
+
 
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/buttonPUMP"
